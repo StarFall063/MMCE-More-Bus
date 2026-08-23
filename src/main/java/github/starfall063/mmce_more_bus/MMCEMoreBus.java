@@ -13,7 +13,13 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = Tags.MOD_ID, name = Tags.MOD_NAME, version = Tags.VERSION)
+@Mod(
+        modid = Tags.MOD_ID,
+        name = Tags.MOD_NAME,
+        version = Tags.VERSION,
+        dependencies = "required-after:appliedenergistics2;required-after:modularmachinery;"
+                + "required-after:jei;after:mekanism;after:mekeng"
+)
 public final class MMCEMoreBus {
     public static final Logger LOGGER = LogManager.getLogger(Tags.MOD_NAME);
     public static final String CLIENT_PROXY = "github.starfall063.mmce_more_bus.proxy.ClientProxy";
@@ -44,4 +50,3 @@ public final class MMCEMoreBus {
         proxy.init();
     }
 }
-
