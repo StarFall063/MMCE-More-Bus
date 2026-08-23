@@ -108,6 +108,12 @@ repositories {
         name 'CleanroomMC Maven'
         url 'https://maven.cleanroommc.com'
     }
+    maven {
+        url 'https://cursemaven.com'
+    }
+    maven {
+        url 'https://maven.blamejared.com/'
+    }
 }
 
 dependencies {
@@ -148,6 +154,15 @@ dependencies {
         testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
         testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     }
+
+    implementation("CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.703")
+    implementation(rfg.deobf("curse.maven:configanytime-870276:5212709"))
+    implementation(rfg.deobf("curse.maven:mekanism-ce-unofficial-840735:7680340"))
+    implementation(rfg.deobf("curse.maven:mekanism-energistics-1027681:5775101"))
+    implementation(rfg.deobf("curse.maven:modularmachinery-ce-817377:7372951"))
+    implementation(rfg.deobf("curse.maven:ae2-unofficial-extended-life-570458:6302098"))
+    implementation(rfg.deobf("curse.maven:neeves-ae2-extended-life-additions-884359:5380800"))
+    implementation(rfg.deobf("curse.maven:had-enough-items-557549:7515497"))
 }
 
 apply from: 'gradle/scripts/dependencies.gradle'

@@ -1,0 +1,8 @@
+{
+  "forge_marker": 1,
+  "defaults": { "model": "mmce_more_bus:meuniversaloutputbus" },
+  "variants": {
+    "normal": [{ "model": "mmce_more_bus:meuniversaloutputbus" }],
+    "inventory": [{ "model": "mmce_more_bus:meuniversaloutputbus" }]
+  }
+}
