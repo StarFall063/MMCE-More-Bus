@@ -62,7 +62,6 @@ abstract class GuiMEInventoryInputBusBase extends AEBaseGuiContainerDynamic impl
     private static final int SEGMENTED_PANEL_MIDDLE_TEXTURE_HEIGHT = SETTINGS_TEXTURE_HEIGHT - 10;
     private static final int SEGMENTED_PANEL_BOTTOM_TEXTURE_Y = SETTINGS_TEXTURE_HEIGHT - SEGMENTED_PANEL_BORDER_HEIGHT;
     private static final int PANEL_WIDTH = SETTINGS_TEXTURE_WIDTH;
-    private static final int SETTINGS_LABEL_MAX_WIDTH = PANEL_WIDTH - SETTINGS_LABEL_X * 2;
     private static final int PANEL_HEIGHT = SETTINGS_TEXTURE_HEIGHT;
     private static final int PANEL_DRAG_HEIGHT = 16;
     private static final int PANEL_CONTROL_SIZE = 13;
@@ -70,6 +69,7 @@ abstract class GuiMEInventoryInputBusBase extends AEBaseGuiContainerDynamic impl
     private static final int SETTINGS_ROW_Y = 32;
     private static final int SETTINGS_TEXT_Y = SETTINGS_ROW_Y + 3;
     private static final int SETTINGS_LABEL_X = 6;
+    private static final int SETTINGS_LABEL_MAX_WIDTH = PANEL_WIDTH - SETTINGS_LABEL_X * 2;
     private static final int DECREASE_BUTTON_X = 18;
     private static final int MIN_STACK_SIZE_FIELD_X = 35;
     private static final int MIN_STACK_SIZE_FIELD_WIDTH = 57;

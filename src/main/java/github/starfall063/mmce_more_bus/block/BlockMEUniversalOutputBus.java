@@ -1,7 +1,6 @@
 package github.starfall063.mmce_more_bus.block;
 
 import github.kasuminova.mmce.common.block.appeng.BlockMEItemBus;
-import github.starfall063.mmce_more_bus.MMCEMoreBus;
 import github.starfall063.mmce_more_bus.MMCEMoreBusCreativeTab;
 import github.starfall063.mmce_more_bus.Tags;
 import github.starfall063.mmce_more_bus.gui.MMCEGuiHandler;
@@ -29,11 +28,7 @@ public final class BlockMEUniversalOutputBus extends BlockMEItemBus {
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand,
                                     EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (hand != EnumHand.MAIN_HAND) return false;
-        if (!world.isRemote) {
-            player.openGui(MMCEMoreBus.instance, MMCEGuiHandler.ME_UNIVERSAL_OUTPUT_BUS,
-                    world, pos.getX(), pos.getY(), pos.getZ());
-        }
-        return true;
+        return MEInventoryBusActivation.openGui(
+                world, pos, player, hand, MMCEGuiHandler.ME_UNIVERSAL_OUTPUT_BUS);
     }
 }

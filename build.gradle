@@ -111,6 +111,9 @@ repositories {
     maven {
         url 'https://cursemaven.com'
     }
+    maven {
+        url 'https://maven.blamejared.com/'
+    }
 }
 
 dependencies {
@@ -157,6 +160,8 @@ dependencies {
     implementation(rfg.deobf("curse.maven:mekanism-energistics-1027681:5775101"))
     implementation(rfg.deobf("curse.maven:modularmachinery-ce-817377:7372951"))
     implementation(rfg.deobf("curse.maven:ae2-unofficial-extended-life-570458:6302098"))
+    runtimeOnly("curse.maven:crafttweaker-239197:4534504")
+    implementation(rfg.deobf("curse.maven:had-enough-items-557549:7515497"))
 }
 
 apply from: 'gradle/scripts/dependencies.gradle'

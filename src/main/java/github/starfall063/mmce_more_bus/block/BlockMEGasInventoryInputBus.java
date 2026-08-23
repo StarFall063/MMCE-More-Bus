@@ -1,7 +1,6 @@
 package github.starfall063.mmce_more_bus.block;
 
 import github.kasuminova.mmce.common.block.appeng.BlockMEGasBus;
-import github.starfall063.mmce_more_bus.MMCEMoreBus;
 import github.starfall063.mmce_more_bus.MMCEMoreBusCreativeTab;
 import github.starfall063.mmce_more_bus.Tags;
 import github.starfall063.mmce_more_bus.gui.MMCEGuiHandler;
@@ -38,17 +37,7 @@ public final class BlockMEGasInventoryInputBus extends BlockMEGasBus {
             float hitY,
             float hitZ
     ) {
-        if (hand != EnumHand.MAIN_HAND) return false;
-        if (!world.isRemote) {
-            player.openGui(
-                    MMCEMoreBus.instance,
-                    MMCEGuiHandler.ME_GAS_INVENTORY_INPUT_BUS,
-                    world,
-                    pos.getX(),
-                    pos.getY(),
-                    pos.getZ()
-            );
-        }
-        return true;
+        return MEInventoryBusActivation.openGui(
+                world, pos, player, hand, MMCEGuiHandler.ME_GAS_INVENTORY_INPUT_BUS);
     }
 }

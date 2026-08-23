@@ -6,6 +6,7 @@ import github.starfall063.mmce_more_bus.init.ModBlocks;
 import github.starfall063.mmce_more_bus.tile.*;
 import hellfirepvp.modularmachinery.common.block.BlockDynamicColor;
 import hellfirepvp.modularmachinery.common.item.ItemBlockMEMachineComponent;
+import hellfirepvp.modularmachinery.common.item.ItemDynamicColor;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -31,6 +32,7 @@ import java.util.Map;
 public final class RegistryBlocks {
     private static final Map<Block, ItemBlock> ITEM_BLOCKS = new LinkedHashMap<>();
     private static final List<BlockDynamicColor> DYNAMIC_COLOR_BLOCKS = new ArrayList<>();
+    private static final List<ItemDynamicColor> DYNAMIC_COLOR_ITEMS = new ArrayList<>();
 
     private RegistryBlocks() {
     }
@@ -65,7 +67,9 @@ public final class RegistryBlocks {
                 : new ItemBlock(block);
         itemBlock.setRegistryName(block.getRegistryName());
         itemBlock.setTranslationKey(block.getTranslationKey());
-        RegistryItems.trackDynamicColorItem(itemBlock);
+        if (itemBlock instanceof ItemDynamicColor) {
+            DYNAMIC_COLOR_ITEMS.add((ItemDynamicColor) itemBlock);
+        }
         return itemBlock;
     }
 
@@ -87,6 +91,17 @@ public final class RegistryBlocks {
 
     private static ResourceLocation id(String path) {
         return new ResourceLocation(Tags.MOD_ID, path);
+    }
+
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public static void registerItemColors(ColorHandlerEvent.Item event) {
+        for (ItemDynamicColor dynamicColorItem : DYNAMIC_COLOR_ITEMS) {
+            event.getItemColors().registerItemColorHandler(
+                    dynamicColorItem::getColorFromItemstack,
+                    (Item) dynamicColorItem
+            );
+        }
     }
 
     @Mod.EventBusSubscriber(modid = Tags.MOD_ID)
