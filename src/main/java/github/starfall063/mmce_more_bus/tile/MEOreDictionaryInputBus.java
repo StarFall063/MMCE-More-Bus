@@ -37,11 +37,11 @@ public final class MEOreDictionaryInputBus extends AbstractMarkerMEInputBus<Item
     private static final String KEY_ORE_NAME = "sfc_ore_dictionary_name";
     private static final String KEY_PULL_MODE = "sfc_pull_mode";
     private static final String KEY_MATCHING_MODE = "sfc_matching_mode";
-    private MEItemInventorySnapshot snapshot = MEItemInventorySnapshot.empty();    private final MEItemInventoryVirtualHandler virtualHandler = new MEItemInventoryVirtualHandler(
+    private MEItemInventorySnapshot snapshot = MEItemInventorySnapshot.empty();
+    private String oreDictionaryName = "";    private final MEItemInventoryVirtualHandler virtualHandler = new MEItemInventoryVirtualHandler(
             MEItemInventorySnapshot.empty(),
             this::extractFromNetwork
     );
-    private String oreDictionaryName = "";
     private int pullMode = PULL_BY_AMOUNT;
     private int matchingMode = DEFAULT_MATCHING_MODE;
     private String compiledExpression;
@@ -602,6 +602,8 @@ public final class MEOreDictionaryInputBus extends AbstractMarkerMEInputBus<Item
         compiledMatchingMode = -1;
         compiledOreNameMatcher = null;
     }
+
+
 
 
 }

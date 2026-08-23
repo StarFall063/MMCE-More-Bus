@@ -4,7 +4,7 @@ import github.starfall063.mmce_more_bus.gui.HeiExtraAreaProvider;
 import mezz.jei.api.gui.IAdvancedGuiHandler;
 import net.minecraft.client.gui.inventory.GuiContainer;
 
-import java.awt.Rectangle;
+import java.awt.*;
 import java.util.List;
 
 final class MMCEMoreBusHEIHandler<T extends GuiContainer & HeiExtraAreaProvider>

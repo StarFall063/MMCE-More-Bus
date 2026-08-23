@@ -26,10 +26,10 @@ public final class GuiMEUniversalOutputBus extends GuiMEInventoryInputBusBase {
     private static final int RESOURCE_COLUMNS = 9;
     private static final int RESOURCE_COUNT = 36;
     private static final int RESOURCE_ROWS = (RESOURCE_COUNT + RESOURCE_COLUMNS - 1) / RESOURCE_COLUMNS;
+    private static final int SCROLLBAR_HEIGHT = RESOURCE_ROWS * RESOURCE_SLOT_STEP - 2;
     private static final int RESOURCE_SLOT_X = 8;
     private static final int RESOURCE_SLOT_Y = 24;
     private static final int RESOURCE_SLOT_STEP = 18;
-    private static final int SCROLLBAR_HEIGHT = RESOURCE_ROWS * RESOURCE_SLOT_STEP - 2;
     private static final int SCROLLBAR_X = RESOURCE_SLOT_X + RESOURCE_COLUMNS * RESOURCE_SLOT_STEP + 5;
     private static final int SCROLLBAR_Y = 24;
     private static final int SCROLLBAR_WIDTH = 12;
@@ -228,7 +228,7 @@ public final class GuiMEUniversalOutputBus extends GuiMEInventoryInputBusBase {
             MEUniversalOutputBus.DisplayResource resource = resources.get(index);
             ItemStack item = resource.getItem();
             if (!item.isEmpty()) {
-            drawIsolatedHoveringText(itemTooltipWithExactAmount(getItemToolTip(item), resource.getAmount()), mouseX, mouseY);
+                drawIsolatedHoveringText(itemTooltipWithExactAmount(getItemToolTip(item), resource.getAmount()), mouseX, mouseY);
                 return;
             }
             drawIsolatedHoveringText(Arrays.asList(resourceName(resource), exactAmount(resource)), mouseX, mouseY);

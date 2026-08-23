@@ -1,8 +1,8 @@
 package github.starfall063.mmce_more_bus;
 
-import github.starfall063.mmce_more_bus.proxy.CommonProxy;
 import github.starfall063.mmce_more_bus.init.ModBlocks;
 import github.starfall063.mmce_more_bus.module.mmce.me.MEItemInventoryNetwork;
+import github.starfall063.mmce_more_bus.proxy.CommonProxy;
 import github.starfall063.mmce_more_bus.tile.MEItemInventoryInputBusConfig;
 import github.starfall063.mmce_more_bus.tile.MEUniversalOutputBusConfig;
 import net.minecraftforge.fml.common.Mod;

@@ -91,6 +91,7 @@ public final class MEUniversalOutputBus extends MEMachineComponent implements IG
     private List<DisplayResource> sortedResources = Collections.emptyList();
     private boolean sortedResourcesDirty = true;
     private int viewportRevision;
+
     public MEUniversalOutputBus() {
         this(MEUniversalOutputBusConfig.maxDistinctResources(
                 MEUniversalOutputBusConfig.maximumDistinctResources

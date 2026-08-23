@@ -1,9 +1,9 @@
 package github.starfall063.mmce_more_bus.module.mmce.me;
 
+import appeng.container.AEBaseContainer;
 import github.starfall063.mmce_more_bus.MMCEMoreBus;
 import github.starfall063.mmce_more_bus.tile.*;
 import io.netty.buffer.ByteBuf;
-import appeng.container.AEBaseContainer;
 import mekanism.api.gas.GasStack;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;

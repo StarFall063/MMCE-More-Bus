@@ -1,11 +1,6 @@
 package github.starfall063.mmce_more_bus.integration.hei;
 
-import github.starfall063.mmce_more_bus.gui.GuiMEFluidInventoryInputBus;
-import github.starfall063.mmce_more_bus.gui.GuiMEGasInventoryInputBus;
-import github.starfall063.mmce_more_bus.gui.GuiMEItemInventoryInputBus;
-import github.starfall063.mmce_more_bus.gui.GuiMEOreDictionaryInputBus;
-import github.starfall063.mmce_more_bus.gui.GuiMEUniversalInventoryInputBus;
-import github.starfall063.mmce_more_bus.gui.GuiMEUniversalOutputBus;
+import github.starfall063.mmce_more_bus.gui.*;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.JEIPlugin;

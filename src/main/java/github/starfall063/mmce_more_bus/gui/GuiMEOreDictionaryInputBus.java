@@ -269,10 +269,10 @@ public final class GuiMEOreDictionaryInputBus extends GuiMEInventoryInputBusBase
         if (isSettingsPanelOpen()) drawSettingsPanel(mouseX, mouseY);
         if (isSettingsPanelOpen() && isInBounds(mouseX, mouseY, settingsPanelX() + MODE_BUTTON_X,
                 settingsPanelY() + MODE_Y, MODE_BUTTON_SIZE, MODE_BUTTON_SIZE)) {
-                drawIsolatedHoveringText(Collections.singletonList(I18n.format(modeTooltipKey(bus.getPullMode()))), mouseX, mouseY);
+            drawIsolatedHoveringText(Collections.singletonList(I18n.format(modeTooltipKey(bus.getPullMode()))), mouseX, mouseY);
         } else if (isSettingsPanelOpen() && isInBounds(mouseX, mouseY, settingsPanelX() + MATCHING_BUTTON_X,
                 settingsPanelY() + MATCHING_Y, MODE_BUTTON_SIZE, MODE_BUTTON_SIZE)) {
-                drawIsolatedHoveringText(Collections.singletonList(I18n.format(matchingTooltipKey(bus.getMatchingMode()))), mouseX, mouseY);
+            drawIsolatedHoveringText(Collections.singletonList(I18n.format(matchingTooltipKey(bus.getMatchingMode()))), mouseX, mouseY);
         }
     }
 
@@ -290,7 +290,7 @@ public final class GuiMEOreDictionaryInputBus extends GuiMEInventoryInputBusBase
         if ((slot.slotNumber & 1) == 1) {
             tooltip = appendStoredAmount(tooltip, bus.getVirtualAmount(slot.slotNumber / 2));
         }
-                drawIsolatedHoveringText(tooltip, mouseX, mouseY);
+        drawIsolatedHoveringText(tooltip, mouseX, mouseY);
     }
 
     private Slot findDisplaySlotAt(int mouseX, int mouseY) {

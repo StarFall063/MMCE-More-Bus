@@ -20,15 +20,15 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 public final class MEItemInventoryInputBus extends AbstractMarkerMEInputBus<ItemStack> {
     public static final int SLOT_COUNT = AbstractMarkerMEInputBus.SLOT_COUNT;
     private static final String KEY_STATE = "me_item_inventory_input_bus_state";
-    private MEItemInventorySnapshot snapshot = MEItemInventorySnapshot.empty();    private final MEItemInventoryVirtualHandler virtualHandler = new MEItemInventoryVirtualHandler(
-            MEItemInventorySnapshot.empty(),
-            this::extractFromNetwork
-    );
+    private MEItemInventorySnapshot snapshot = MEItemInventorySnapshot.empty();
 
     @Override
     public ItemStack getVisualItemStack() {
         return new ItemStack(ItemsMM.meItemInputBus);
-    }
+    }    private final MEItemInventoryVirtualHandler virtualHandler = new MEItemInventoryVirtualHandler(
+            MEItemInventorySnapshot.empty(),
+            this::extractFromNetwork
+    );
 
     @Override
     public MachineComponent.ItemBus provideComponent() {
@@ -259,6 +259,8 @@ public final class MEItemInventoryInputBus extends AbstractMarkerMEInputBus<Item
         for (int slot = 0; slot < SLOT_COUNT; slot++) markers[slot] = markerAt(slot);
         return markers;
     }
+
+
 
 
 }

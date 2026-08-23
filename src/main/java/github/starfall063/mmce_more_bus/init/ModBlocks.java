@@ -1,11 +1,6 @@
 package github.starfall063.mmce_more_bus.init;
 
-import github.starfall063.mmce_more_bus.block.BlockMEFluidInventoryInputBus;
-import github.starfall063.mmce_more_bus.block.BlockMEGasInventoryInputBus;
-import github.starfall063.mmce_more_bus.block.BlockMEItemInventoryInputBus;
-import github.starfall063.mmce_more_bus.block.BlockMEOreDictionaryInputBus;
-import github.starfall063.mmce_more_bus.block.BlockMEUniversalInventoryInputBus;
-import github.starfall063.mmce_more_bus.block.BlockMEUniversalOutputBus;
+import github.starfall063.mmce_more_bus.block.*;
 import net.minecraft.block.Block;
 
 import java.util.Arrays;

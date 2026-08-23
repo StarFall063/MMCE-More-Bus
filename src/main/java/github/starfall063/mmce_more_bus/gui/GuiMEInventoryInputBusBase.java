@@ -2,13 +2,14 @@ package github.starfall063.mmce_more_bus.gui;
 
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
-import appeng.client.render.StackSizeRenderer;
 import appeng.client.gui.widgets.GuiCustomSlot;
+import appeng.client.render.StackSizeRenderer;
 import appeng.fluids.client.gui.widgets.GuiFluidSlot;
 import appeng.fluids.client.render.FluidStackSizeRenderer;
 import appeng.fluids.util.AEFluidStack;
 import appeng.util.item.AEItemStack;
 import com.mekeng.github.client.render.GasStackSizeRenderer;
+import com.mekeng.github.client.slots.SlotGas;
 import com.mekeng.github.common.me.data.IAEGasStack;
 import com.mekeng.github.common.me.data.impl.AEGasStack;
 import github.kasuminova.mmce.client.gui.AEBaseGuiContainerDynamic;
@@ -16,27 +17,25 @@ import github.kasuminova.mmce.client.gui.widget.Button4State;
 import github.kasuminova.mmce.client.gui.widget.base.WidgetController;
 import github.kasuminova.mmce.client.gui.widget.base.WidgetGui;
 import github.starfall063.mmce_more_bus.Tags;
-import net.minecraft.client.gui.FontRenderer;
 import github.starfall063.mmce_more_bus.module.mmce.me.MEItemInventoryNetwork;
+import mekanism.api.gas.GasStack;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.FluidStack;
-import mekanism.api.gas.GasStack;
-import com.mekeng.github.client.slots.SlotGas;
 
-import java.awt.Rectangle;
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,6 +62,7 @@ abstract class GuiMEInventoryInputBusBase extends AEBaseGuiContainerDynamic impl
     private static final int SEGMENTED_PANEL_MIDDLE_TEXTURE_HEIGHT = SETTINGS_TEXTURE_HEIGHT - 10;
     private static final int SEGMENTED_PANEL_BOTTOM_TEXTURE_Y = SETTINGS_TEXTURE_HEIGHT - SEGMENTED_PANEL_BORDER_HEIGHT;
     private static final int PANEL_WIDTH = SETTINGS_TEXTURE_WIDTH;
+    private static final int SETTINGS_LABEL_MAX_WIDTH = PANEL_WIDTH - SETTINGS_LABEL_X * 2;
     private static final int PANEL_HEIGHT = SETTINGS_TEXTURE_HEIGHT;
     private static final int PANEL_DRAG_HEIGHT = 16;
     private static final int PANEL_CONTROL_SIZE = 13;
@@ -70,7 +70,6 @@ abstract class GuiMEInventoryInputBusBase extends AEBaseGuiContainerDynamic impl
     private static final int SETTINGS_ROW_Y = 32;
     private static final int SETTINGS_TEXT_Y = SETTINGS_ROW_Y + 3;
     private static final int SETTINGS_LABEL_X = 6;
-    private static final int SETTINGS_LABEL_MAX_WIDTH = PANEL_WIDTH - SETTINGS_LABEL_X * 2;
     private static final int DECREASE_BUTTON_X = 18;
     private static final int MIN_STACK_SIZE_FIELD_X = 35;
     private static final int MIN_STACK_SIZE_FIELD_WIDTH = 57;
@@ -78,12 +77,10 @@ abstract class GuiMEInventoryInputBusBase extends AEBaseGuiContainerDynamic impl
     private static final int MIN_STACK_SIZE_TEXT_COLOR = 0xFFFFFF;
     private static final int MIN_STACK_SIZE_FIELD_BACKGROUND_COLOR = 0xFF8B8B8B;
     private static final int INCREASE_BUTTON_X = 96;
-    private final CachedFluidPreviewSlot fluidPreviewSlot = new CachedFluidPreviewSlot();
-    private final CachedGasPreviewSlot gasPreviewSlot = new CachedGasPreviewSlot();
-
     private static int rememberedPanelX = Integer.MIN_VALUE;
     private static int rememberedPanelY;
-
+    private final CachedFluidPreviewSlot fluidPreviewSlot = new CachedFluidPreviewSlot();
+    private final CachedGasPreviewSlot gasPreviewSlot = new CachedGasPreviewSlot();
     private final BlockPos position;
     private final IntSupplier minimumStock;
     private final ResourceLocation mainTexture;
@@ -94,40 +91,6 @@ abstract class GuiMEInventoryInputBusBase extends AEBaseGuiContainerDynamic impl
     private int dragOffsetX;
     private int dragOffsetY;
     private GuiTextField minimumStockField;
-
-    protected enum PreviewType {
-        ITEM,
-        FLUID,
-        GAS
-    }
-
-    protected static final class PreviewResource {
-        private final PreviewType type;
-        private final ItemStack item;
-        private final FluidStack fluid;
-        private final GasStack gas;
-        private final long amount;
-
-        private PreviewResource(PreviewType type, ItemStack item, FluidStack fluid, GasStack gas, long amount) {
-            this.type = type;
-            this.item = item;
-            this.fluid = fluid;
-            this.gas = gas;
-            this.amount = amount;
-        }
-
-        protected static PreviewResource item(ItemStack stack, long amount) {
-            return new PreviewResource(PreviewType.ITEM, stack, null, null, amount);
-        }
-
-        protected static PreviewResource fluid(FluidStack stack, long amount) {
-            return new PreviewResource(PreviewType.FLUID, null, stack, null, amount);
-        }
-
-        protected static PreviewResource gas(GasStack stack, long amount) {
-            return new PreviewResource(PreviewType.GAS, null, null, stack, amount);
-        }
-    }
 
     protected GuiMEInventoryInputBusBase(
             Container container,
@@ -143,6 +106,107 @@ abstract class GuiMEInventoryInputBusBase extends AEBaseGuiContainerDynamic impl
         ySize = 206;
         widgetController = new WidgetController(WidgetGui.of(this, xSize, ySize, guiLeft, guiTop));
         widgetController.addWidget(createSettingsButton());
+    }
+
+    static String sharedConfigurationTranslationKey(String suffix) {
+        return "gui.mmce_more_bus.me_input_bus." + suffix;
+    }
+
+    static String storedAmountText(String amount) {
+        return "\u00a77" + I18n.format("gui.mmce_more_bus.me_inventory_bus.stored_amount", amount);
+    }
+
+    static String storedAmountText(long amount) {
+        return storedAmountText(formatStoredAmount(amount));
+    }
+
+    static String storedFluidAmountText(long amount) {
+        return storedAmountText(formatStoredAmount(amount) + " mB");
+    }
+
+    static List<String> appendStoredAmount(List<String> tooltip, long amount) {
+        return appendTooltipLine(tooltip, storedAmountText(amount));
+    }
+
+    static List<String> appendStoredFluidAmount(List<String> tooltip, long amount) {
+        return appendTooltipLine(tooltip, storedFluidAmountText(amount));
+    }
+
+    private static List<String> appendTooltipLine(List<String> tooltip, String line) {
+        List<String> result = new ArrayList<>(tooltip);
+        result.add(line);
+        return result;
+    }
+
+    private static String formatStoredAmount(long amount) {
+        return String.format(Locale.ROOT, "%,d", Math.max(0L, amount));
+    }
+
+    /**
+     * AE2's fluid and gas slots can leave their tint and lighting state active.
+     * Restore the baseline expected by the following item slot.
+     */
+    protected static void restoreNativeResourceRenderState() {
+        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+        GlStateManager.enableTexture2D();
+        GlStateManager.enableAlpha();
+        GlStateManager.alphaFunc(org.lwjgl.opengl.GL11.GL_GREATER, 0.1F);
+        GlStateManager.enableDepth();
+        GlStateManager.depthFunc(org.lwjgl.opengl.GL11.GL_LEQUAL);
+        GlStateManager.depthMask(true);
+        GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(
+                GlStateManager.SourceFactor.SRC_ALPHA,
+                GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
+                GlStateManager.SourceFactor.ONE,
+                GlStateManager.DestFactor.ZERO
+        );
+        GlStateManager.enableCull();
+        GlStateManager.cullFace(GlStateManager.CullFace.BACK);
+        RenderHelper.enableGUIStandardItemLighting();
+        GlStateManager.enableRescaleNormal();
+        GlStateManager.matrixMode(org.lwjgl.opengl.GL11.GL_MODELVIEW);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+    }
+
+    static void renderItemAmount(FontRenderer fontRenderer, ItemStack stack, long amount, int slotX, int slotY) {
+        if (stack == null || stack.isEmpty()) return;
+        if (amount <= 0L) return;
+        IAEItemStack aeStack = AEItemStack.fromItemStack(stack);
+        if (aeStack == null) return;
+        aeStack.setStackSize(amount);
+        ITEM_AMOUNT_RENDERER.renderStackSize(fontRenderer, aeStack, slotX, slotY);
+    }
+
+    static void renderFluidAmount(FontRenderer fontRenderer, FluidStack stack, long amount, int slotX, int slotY) {
+        if (stack == null) return;
+        if (amount <= 0L) return;
+        IAEFluidStack aeStack = AEFluidStack.fromFluidStack(stack);
+        if (aeStack == null) return;
+        aeStack.setStackSize(amount);
+        FLUID_AMOUNT_RENDERER.renderStackSize(fontRenderer, aeStack, slotX, slotY);
+    }
+
+    static void renderGasAmount(FontRenderer fontRenderer, GasStack stack, long amount, int slotX, int slotY) {
+        if (stack == null) return;
+        if (amount <= 0L) return;
+        IAEGasStack aeStack = AEGasStack.of(stack);
+        if (aeStack == null) return;
+        aeStack.setStackSize(amount);
+        GAS_AMOUNT_RENDERER.renderStackSize(
+                fontRenderer,
+                aeStack,
+                slotX + GAS_AMOUNT_OFFSET_X,
+                slotY + GAS_AMOUNT_OFFSET_Y
+        );
+    }
+
+    static SoundEvent configurationButtonClickSound() {
+        return SoundEvents.UI_BUTTON_CLICK;
+    }
+
+    private static boolean isInBounds(int mouseX, int mouseY, int x, int y, int width, int height) {
+        return mouseX >= x && mouseX < x + width && mouseY >= y && mouseY < y + height;
     }
 
     @Override
@@ -375,40 +439,6 @@ abstract class GuiMEInventoryInputBusBase extends AEBaseGuiContainerDynamic impl
         return sharedConfigurationTranslationKey("configure");
     }
 
-    static String sharedConfigurationTranslationKey(String suffix) {
-        return "gui.mmce_more_bus.me_input_bus." + suffix;
-    }
-
-    static String storedAmountText(String amount) {
-        return "\u00a77" + I18n.format("gui.mmce_more_bus.me_inventory_bus.stored_amount", amount);
-    }
-
-    static String storedAmountText(long amount) {
-        return storedAmountText(formatStoredAmount(amount));
-    }
-
-    static String storedFluidAmountText(long amount) {
-        return storedAmountText(formatStoredAmount(amount) + " mB");
-    }
-
-    static List<String> appendStoredAmount(List<String> tooltip, long amount) {
-        return appendTooltipLine(tooltip, storedAmountText(amount));
-    }
-
-    static List<String> appendStoredFluidAmount(List<String> tooltip, long amount) {
-        return appendTooltipLine(tooltip, storedFluidAmountText(amount));
-    }
-
-    private static List<String> appendTooltipLine(List<String> tooltip, String line) {
-        List<String> result = new ArrayList<>(tooltip);
-        result.add(line);
-        return result;
-    }
-
-    private static String formatStoredAmount(long amount) {
-        return String.format(Locale.ROOT, "%,d", Math.max(0L, amount));
-    }
-
     protected final void renderPreviewResource(PreviewResource resource, int x, int y) {
         if (resource == null || resource.amount <= 0L) return;
 
@@ -546,33 +576,6 @@ abstract class GuiMEInventoryInputBusBase extends AEBaseGuiContainerDynamic impl
         }
     }
 
-    /**
-     * AE2's fluid and gas slots can leave their tint and lighting state active.
-     * Restore the baseline expected by the following item slot.
-     */
-    protected static void restoreNativeResourceRenderState() {
-        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
-        GlStateManager.enableTexture2D();
-        GlStateManager.enableAlpha();
-        GlStateManager.alphaFunc(org.lwjgl.opengl.GL11.GL_GREATER, 0.1F);
-        GlStateManager.enableDepth();
-        GlStateManager.depthFunc(org.lwjgl.opengl.GL11.GL_LEQUAL);
-        GlStateManager.depthMask(true);
-        GlStateManager.enableBlend();
-        GlStateManager.tryBlendFuncSeparate(
-                GlStateManager.SourceFactor.SRC_ALPHA,
-                GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
-                GlStateManager.SourceFactor.ONE,
-                GlStateManager.DestFactor.ZERO
-        );
-        GlStateManager.enableCull();
-        GlStateManager.cullFace(GlStateManager.CullFace.BACK);
-        RenderHelper.enableGUIStandardItemLighting();
-        GlStateManager.enableRescaleNormal();
-        GlStateManager.matrixMode(org.lwjgl.opengl.GL11.GL_MODELVIEW);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-    }
-
     protected final void drawInheritedSlot(Slot slot) {
         int previousMatrixMode = org.lwjgl.opengl.GL11.glGetInteger(org.lwjgl.opengl.GL11.GL_MATRIX_MODE);
         GlStateManager.matrixMode(org.lwjgl.opengl.GL11.GL_MODELVIEW);
@@ -585,42 +588,6 @@ abstract class GuiMEInventoryInputBusBase extends AEBaseGuiContainerDynamic impl
             GlStateManager.matrixMode(previousMatrixMode);
             restoreNativeResourceRenderState();
         }
-    }
-
-    static void renderItemAmount(FontRenderer fontRenderer, ItemStack stack, long amount, int slotX, int slotY) {
-        if (stack == null || stack.isEmpty()) return;
-        if (amount <= 0L) return;
-        IAEItemStack aeStack = AEItemStack.fromItemStack(stack);
-        if (aeStack == null) return;
-        aeStack.setStackSize(amount);
-        ITEM_AMOUNT_RENDERER.renderStackSize(fontRenderer, aeStack, slotX, slotY);
-    }
-
-    static void renderFluidAmount(FontRenderer fontRenderer, FluidStack stack, long amount, int slotX, int slotY) {
-        if (stack == null) return;
-        if (amount <= 0L) return;
-        IAEFluidStack aeStack = AEFluidStack.fromFluidStack(stack);
-        if (aeStack == null) return;
-        aeStack.setStackSize(amount);
-        FLUID_AMOUNT_RENDERER.renderStackSize(fontRenderer, aeStack, slotX, slotY);
-    }
-
-    static void renderGasAmount(FontRenderer fontRenderer, GasStack stack, long amount, int slotX, int slotY) {
-        if (stack == null) return;
-        if (amount <= 0L) return;
-        IAEGasStack aeStack = AEGasStack.of(stack);
-        if (aeStack == null) return;
-        aeStack.setStackSize(amount);
-        GAS_AMOUNT_RENDERER.renderStackSize(
-                fontRenderer,
-                aeStack,
-                slotX + GAS_AMOUNT_OFFSET_X,
-                slotY + GAS_AMOUNT_OFFSET_Y
-        );
-    }
-
-    static SoundEvent configurationButtonClickSound() {
-        return SoundEvents.UI_BUTTON_CLICK;
     }
 
     protected final void playConfigurationButtonClickSound() {
@@ -802,8 +769,38 @@ abstract class GuiMEInventoryInputBusBase extends AEBaseGuiContainerDynamic impl
         panelY = Math.max(0, Math.min(panelY, height - settingsPanelHeight()));
     }
 
-    private static boolean isInBounds(int mouseX, int mouseY, int x, int y, int width, int height) {
-        return mouseX >= x && mouseX < x + width && mouseY >= y && mouseY < y + height;
+    protected enum PreviewType {
+        ITEM,
+        FLUID,
+        GAS
+    }
+
+    protected static final class PreviewResource {
+        private final PreviewType type;
+        private final ItemStack item;
+        private final FluidStack fluid;
+        private final GasStack gas;
+        private final long amount;
+
+        private PreviewResource(PreviewType type, ItemStack item, FluidStack fluid, GasStack gas, long amount) {
+            this.type = type;
+            this.item = item;
+            this.fluid = fluid;
+            this.gas = gas;
+            this.amount = amount;
+        }
+
+        protected static PreviewResource item(ItemStack stack, long amount) {
+            return new PreviewResource(PreviewType.ITEM, stack, null, null, amount);
+        }
+
+        protected static PreviewResource fluid(FluidStack stack, long amount) {
+            return new PreviewResource(PreviewType.FLUID, null, stack, null, amount);
+        }
+
+        protected static PreviewResource gas(GasStack stack, long amount) {
+            return new PreviewResource(PreviewType.GAS, null, null, stack, amount);
+        }
     }
 
     private static final class CachedFluidPreviewSlot extends GuiFluidSlot {
