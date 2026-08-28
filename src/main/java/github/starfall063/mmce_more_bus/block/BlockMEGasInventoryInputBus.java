@@ -6,12 +6,21 @@ import github.starfall063.mmce_more_bus.Tags;
 import github.starfall063.mmce_more_bus.gui.MMCEGuiHandler;
 import github.starfall063.mmce_more_bus.tile.MEGasInventoryInputBus;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public final class BlockMEGasInventoryInputBus extends BlockMEGasBus {
     public BlockMEGasInventoryInputBus() {
@@ -40,4 +49,10 @@ public final class BlockMEGasInventoryInputBus extends BlockMEGasBus {
         return MEInventoryBusActivation.openGui(
                 world, pos, player, hand, MMCEGuiHandler.ME_GAS_INVENTORY_INPUT_BUS);
     }
+
+    @Override public void dropBlockAsItemWithChance(World world, BlockPos pos, IBlockState state, float chance, int fortune) { }
+    @Override public void getDrops(NonNullList<ItemStack> drops, net.minecraft.world.IBlockAccess world, BlockPos pos, IBlockState state, int fortune) { }
+    @Override public void breakBlock(World world, BlockPos pos, IBlockState state) { MachineComponentDrop.spawnDrop(world, pos, this); super.breakBlock(world, pos, state); }
+    @Override public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) { super.onBlockPlacedBy(world, pos, state, placer, stack); MachineComponentDrop.restoreState(world, pos, stack); }
+    @Override @SideOnly(Side.CLIENT) public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) { super.addInformation(stack, world, tooltip, flag); MachineComponentDrop.appendConfiguredTooltip(stack, tooltip); }
 }

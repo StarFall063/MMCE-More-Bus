@@ -438,11 +438,15 @@ public final class MEUniversalInventoryInputBus extends AbstractMEInputBus imple
         return true;
     }
 
-    private boolean hasMarkers() {
+    public boolean hasMarkers() {
         for (Marker marker : markers) {
             if (marker != null) return true;
         }
         return false;
+    }
+
+    public boolean hasDropConfiguration() {
+        return hasMarkers() || minimumStock != 1;
     }
 
     @Override

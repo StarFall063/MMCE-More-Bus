@@ -80,6 +80,11 @@ public abstract class AbstractMarkerMEInputBus<M> extends AbstractMEInputBus {
         return false;
     }
 
+    /** Returns whether the dropped bus should carry its configured state. */
+    public boolean hasDropConfiguration() {
+        return hasMarkers() || minStackSize != 1;
+    }
+
     public final int getMinStackSize() {
         return minStackSize;
     }

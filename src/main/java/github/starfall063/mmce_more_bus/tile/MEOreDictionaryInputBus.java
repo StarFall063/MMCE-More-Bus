@@ -250,6 +250,14 @@ public final class MEOreDictionaryInputBus extends AbstractMarkerMEInputBus<Item
     }
 
     @Override
+    public boolean hasDropConfiguration() {
+        return super.hasDropConfiguration()
+                || !oreDictionaryName.isEmpty()
+                || pullMode != PULL_BY_AMOUNT
+                || matchingMode != DEFAULT_MATCHING_MODE;
+    }
+
+    @Override
     protected int getMinimumPollingInterval() {
         return MEItemInventoryInputBusConfig.minPollingInterval(
                 MEItemInventoryInputBusConfig.POLLING.minimumPollingInterval,
