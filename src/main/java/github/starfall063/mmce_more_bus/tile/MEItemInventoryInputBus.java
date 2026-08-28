@@ -17,7 +17,8 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 /**
  * AE item input bus with sixteen persistent item marker channels.
  */
-public final class MEItemInventoryInputBus extends AbstractMarkerMEInputBus<ItemStack> {
+public final class MEItemInventoryInputBus extends AbstractMarkerMEInputBus<ItemStack>
+        implements MachineComponentDropState {
     public static final int SLOT_COUNT = AbstractMarkerMEInputBus.SLOT_COUNT;
     private static final String KEY_STATE = "me_item_inventory_input_bus_state";
     private MEItemInventorySnapshot snapshot = MEItemInventorySnapshot.empty();
@@ -130,14 +131,24 @@ public final class MEItemInventoryInputBus extends AbstractMarkerMEInputBus<Item
     @Override
     public void readCustomNBT(NBTTagCompound compound) {
         super.readCustomNBT(compound);
+        readDropState(compound);
+    }
+
+    @Override
+    public void writeCustomNBT(NBTTagCompound compound) {
+        super.writeCustomNBT(compound);
+        writeDropState(compound);
+    }
+
+    @Override
+    public void readDropState(NBTTagCompound compound) {
         if (compound.hasKey(KEY_STATE, 10)) readMarkerState(compound.getCompoundTag(KEY_STATE));
         snapshot = MEItemInventorySnapshot.from(currentMarkers(), getMinStackSize(), new long[SLOT_COUNT]);
         virtualHandler.setSnapshot(snapshot);
     }
 
     @Override
-    public void writeCustomNBT(NBTTagCompound compound) {
-        super.writeCustomNBT(compound);
+    public void writeDropState(NBTTagCompound compound) {
         NBTTagCompound stateTag = new NBTTagCompound();
         writeMarkerState(stateTag);
         compound.setTag(KEY_STATE, stateTag);

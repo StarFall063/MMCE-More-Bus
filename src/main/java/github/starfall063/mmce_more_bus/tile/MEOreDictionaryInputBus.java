@@ -23,7 +23,8 @@ import java.util.function.Predicate;
  * Item-only ME input bus that expands one OreDictionary name into up to sixteen
  * live AE item inputs.
  */
-public final class MEOreDictionaryInputBus extends AbstractMarkerMEInputBus<ItemStack> {
+public final class MEOreDictionaryInputBus extends AbstractMarkerMEInputBus<ItemStack>
+        implements MachineComponentDropState {
     public static final int SLOT_COUNT = AbstractMarkerMEInputBus.SLOT_COUNT;
     public static final int PULL_BY_AMOUNT = 0;
     public static final int PULL_BY_NAME = 1;
@@ -471,6 +472,11 @@ public final class MEOreDictionaryInputBus extends AbstractMarkerMEInputBus<Item
     @Override
     public void readCustomNBT(NBTTagCompound compound) {
         super.readCustomNBT(compound);
+        readDropState(compound);
+    }
+
+    @Override
+    public void readDropState(NBTTagCompound compound) {
         if (compound.hasKey(KEY_STATE, 10)) {
             NBTTagCompound stateTag = compound.getCompoundTag(KEY_STATE);
             readMarkerState(stateTag);
@@ -486,6 +492,11 @@ public final class MEOreDictionaryInputBus extends AbstractMarkerMEInputBus<Item
     @Override
     public void writeCustomNBT(NBTTagCompound compound) {
         super.writeCustomNBT(compound);
+        writeDropState(compound);
+    }
+
+    @Override
+    public void writeDropState(NBTTagCompound compound) {
         NBTTagCompound stateTag = new NBTTagCompound();
         writeMarkerState(stateTag);
         stateTag.setString(KEY_ORE_NAME, oreDictionaryName);

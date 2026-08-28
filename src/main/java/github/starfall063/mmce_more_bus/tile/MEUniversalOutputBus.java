@@ -43,11 +43,13 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 import java.util.*;
 
-public final class MEUniversalOutputBus extends MEMachineComponent implements IGridTickable, MachineCombinationComponent {
+public final class MEUniversalOutputBus extends MEMachineComponent
+        implements IGridTickable, MachineCombinationComponent, MachineComponentDropState {
     public static final int DEFAULT_MAX_DISTINCT_RESOURCES = 128;
     private static final boolean DEBUG_LOGGING = Boolean.getBoolean("mmce_more_bus.debug.me");
     private static final int MAX_FLUSHES_PER_TICK = 16;
-    private static final String KEY_BUFFER = "sfc_me_universal_output_buffer";
+    private static final String KEY_BUFFER = "meuniversaloutputbus_buffer";
+    private static final String LEGACY_KEY_BUFFER = "sfc_me_universal_output_buffer";
     private static final String KEY_TYPE = "Type";
     private static final String KEY_IDENTITY = "Identity";
     private static final String KEY_AMOUNT = "Amount";
@@ -361,7 +363,7 @@ public final class MEUniversalOutputBus extends MEMachineComponent implements IG
     @Override
     public void readCustomNBT(NBTTagCompound compound) {
         super.readCustomNBT(compound);
-        readBufferState(compound);
+        readDropState(compound);
     }
 
     void readBufferState(NBTTagCompound compound) {
@@ -369,7 +371,8 @@ public final class MEUniversalOutputBus extends MEMachineComponent implements IG
         pendingResources.clear();
         queuedResources.clear();
 
-        NBTTagList entries = compound.getTagList(KEY_BUFFER, 10);
+        String bufferKey = compound.hasKey(KEY_BUFFER, 9) ? KEY_BUFFER : LEGACY_KEY_BUFFER;
+        NBTTagList entries = compound.getTagList(bufferKey, 10);
         for (int index = 0; index < entries.tagCount(); index++) {
             NBTTagCompound entry = entries.getCompoundTagAt(index);
             ResourceKey key = ResourceKey.read(entry);
@@ -383,6 +386,16 @@ public final class MEUniversalOutputBus extends MEMachineComponent implements IG
     @Override
     public void writeCustomNBT(NBTTagCompound compound) {
         super.writeCustomNBT(compound);
+        writeDropState(compound);
+    }
+
+    @Override
+    public void readDropState(NBTTagCompound compound) {
+        readBufferState(compound);
+    }
+
+    @Override
+    public void writeDropState(NBTTagCompound compound) {
         writeBufferState(compound);
     }
 
@@ -392,6 +405,7 @@ public final class MEUniversalOutputBus extends MEMachineComponent implements IG
             NBTTagCompound stored = entry.getKey().write(entry.getValue());
             entries.appendTag(stored);
         }
+        compound.removeTag(LEGACY_KEY_BUFFER);
         compound.setTag(KEY_BUFFER, entries);
     }
 

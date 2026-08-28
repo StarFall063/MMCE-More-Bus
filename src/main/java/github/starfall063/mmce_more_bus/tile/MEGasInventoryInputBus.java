@@ -26,7 +26,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.IntSupplier;
 
-public class MEGasInventoryInputBus extends AbstractMarkerMEInputBus<GasStack> {
+public class MEGasInventoryInputBus extends AbstractMarkerMEInputBus<GasStack>
+        implements MachineComponentDropState {
     public static final int SLOT_COUNT = AbstractMarkerMEInputBus.SLOT_COUNT;
     private static final String KEY_MARKERS = "sfc_me_gas_markers";
     private static final String KEY_PREVIEW = "sfc_me_gas_preview";
@@ -97,12 +98,22 @@ public class MEGasInventoryInputBus extends AbstractMarkerMEInputBus<GasStack> {
     @Override
     public void readCustomNBT(NBTTagCompound compound) {
         super.readCustomNBT(compound);
-        readMarkerState(compound);
+        readDropState(compound);
     }
 
     @Override
     public void writeCustomNBT(NBTTagCompound compound) {
         super.writeCustomNBT(compound);
+        writeDropState(compound);
+    }
+
+    @Override
+    public void readDropState(NBTTagCompound compound) {
+        readMarkerState(compound);
+    }
+
+    @Override
+    public void writeDropState(NBTTagCompound compound) {
         writeMarkerState(compound);
     }
 

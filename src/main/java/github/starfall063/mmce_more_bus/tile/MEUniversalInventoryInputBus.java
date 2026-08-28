@@ -38,7 +38,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
-public final class MEUniversalInventoryInputBus extends AbstractMEInputBus implements MachineCombinationComponent {
+public final class MEUniversalInventoryInputBus extends AbstractMEInputBus
+        implements MachineCombinationComponent, MachineComponentDropState {
     public static final int SLOT_COUNT = 16;
     private static final boolean DEBUG_LOGGING = Boolean.getBoolean("mmce_more_bus.debug.me");
     private static final String KEY_MARKERS = "sfc_me_inventory_markers";
@@ -307,13 +308,23 @@ public final class MEUniversalInventoryInputBus extends AbstractMEInputBus imple
     @Override
     public void readCustomNBT(NBTTagCompound compound) {
         super.readCustomNBT(compound);
-        readMarkerState(compound);
-        minimumStock = Math.max(1, compound.getInteger(KEY_MIN_STACK_SIZE));
+        readDropState(compound);
     }
 
     @Override
     public void writeCustomNBT(NBTTagCompound compound) {
         super.writeCustomNBT(compound);
+        writeDropState(compound);
+    }
+
+    @Override
+    public void readDropState(NBTTagCompound compound) {
+        readMarkerState(compound);
+        minimumStock = Math.max(1, compound.getInteger(KEY_MIN_STACK_SIZE));
+    }
+
+    @Override
+    public void writeDropState(NBTTagCompound compound) {
         writeMarkerState(compound);
         compound.setInteger(KEY_MIN_STACK_SIZE, minimumStock);
     }

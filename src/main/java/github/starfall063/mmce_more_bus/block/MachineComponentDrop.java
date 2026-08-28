@@ -2,17 +2,16 @@ package github.starfall063.mmce_more_bus.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import github.kasuminova.mmce.common.tile.base.MEMachineComponent;
 import github.starfall063.mmce_more_bus.tile.AbstractMarkerMEInputBus;
 import github.starfall063.mmce_more_bus.tile.MEUniversalInventoryInputBus;
 import github.starfall063.mmce_more_bus.tile.MEUniversalOutputBus;
+import github.starfall063.mmce_more_bus.tile.MachineComponentDropState;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -30,9 +29,9 @@ public final class MachineComponentDrop {
     }
 
     public static void writeState(ItemStack drop, TileEntity tile, boolean configured) {
-        if (!(tile instanceof MEMachineComponent) || !configured) return;
+        if (!(tile instanceof MachineComponentDropState) || !configured) return;
         NBTTagCompound state = new NBTTagCompound();
-        ((MEMachineComponent) tile).writeCustomNBT(state);
+        ((MachineComponentDropState) tile).writeDropState(state);
         state.setBoolean(CONFIGURED_KEY, true);
         drop.setTagCompound(state);
     }
@@ -41,8 +40,8 @@ public final class MachineComponentDrop {
         if (stack == null || !stack.hasTagCompound()) return;
         TileEntity tile = world.getTileEntity(pos);
         if (tile == null) return;
-        if (!(tile instanceof MEMachineComponent)) return;
-        ((MEMachineComponent) tile).readCustomNBT(stack.getTagCompound());
+        if (!(tile instanceof MachineComponentDropState)) return;
+        ((MachineComponentDropState) tile).readDropState(stack.getTagCompound());
         tile.markDirty();
     }
 
@@ -68,7 +67,7 @@ public final class MachineComponentDrop {
         if (world.isRemote) return;
         TileEntity tile = world.getTileEntity(pos);
         ItemStack drop = createDrop(block);
-        if (tile instanceof MEMachineComponent) writeState(drop, tile, isConfigured(tile));
+        if (tile instanceof MachineComponentDropState) writeState(drop, tile, isConfigured(tile));
         Block.spawnAsEntity(world, pos, drop);
     }
 
